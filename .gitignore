@@ -1,0 +1,5 @@
+.env
+docs/Audi/
+models/qdrant_audi_vector_store/
+models/qdrant_audi_vector_store2/
+.idea/

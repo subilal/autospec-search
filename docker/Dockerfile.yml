@@ -1,0 +1,41 @@
+services:
+
+# FastAPI app
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.app
+    container_name: autospec-app
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_URL=http://ollama:11434/api/generate
+    volumes:
+      - models\qdrant_audi_vector_store2:/app/qdrant_audi_vector_store2/
+    depends_on:
+      - ollama
+    networks:
+      - autospec-net
+    restart: unless-stopped
+
+# Ollama server
+
+  ollama:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.ollama
+    container_name: autospec-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - autospec-net
+    restart: unless-stopped
+
+networks:
+  autospec-net:
+    driver: bridge
+
+volumes:
+  ollama_data:
