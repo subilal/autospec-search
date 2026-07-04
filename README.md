@@ -1,29 +1,29 @@
 # AutoSpec Search
 
 A fully local, privacy-preserving search tool for engineering teams that need to
-find details buried inside long product specification PDFs — text, tables,
-*and* diagrams/images — without manually scrolling through hundreds of pages
+find details buried inside long product specification PDFs like text, tables,
+*and* diagrams/images, without manually scrolling through hundreds of pages
 per product.
 
 Nothing leaves the machine it runs on. Document parsing, embeddings, image
 captioning, and the language model that answers your question all run
-locally — there is no external API call, no cloud upload, and no telemetry.
+locally,  there is no external API call, no cloud upload, and no telemetry.
 This makes it suitable for internal specs, proprietary designs, or any
 documentation that can't be sent to a third-party service.
 
 ## Why this exists
 
-Engineers often need to answer a specific question — "what's the torque
-spec for this component," "what does this connector diagram look like" —
+Engineers often need to answer a specific question  "what's the torque
+spec for this component," "what does this connector diagram look like"
 that's buried somewhere inside a large PDF manual. Ctrl+F only works if you
 already know the exact wording, and it can't search diagrams at all. This
 project builds a searchable index over your spec documents (text, tables,
 and images) and lets you ask questions in plain language, with the answer
-grounded in — and cited to — the actual source pages.
+grounded in and cited to  the actual source pages.
 
 ## How it works
 
-**1. Ingestion** (`models/Language Engine/RAG_VECTOR_DATABASE_Sentence_transformer.py`) — run this once per document
+**1. Ingestion** (`models/Language Engine/RAG_VECTOR_DATABASE_Sentence_transformer.py`) run this once per document
 set, or whenever specs are added/updated:
 - Loads all PDFs in a folder and splits the text into chunks.
 - Extracts embedded images and tables directly from each PDF page (tables
@@ -35,7 +35,7 @@ set, or whenever specs are added/updated:
 - Stores everything in a local Qdrant vector database (on disk, no server
   required) as two collections: one for text/tables/captions, one for images.
 
-**2. Search API** (`api/Language Engine/main.py`) — a small FastAPI service that:
+**2. Search API** (`api/Language Engine/main.py`) a small FastAPI service that:
 - Takes a question, searches both collections, and merges the results by
   relevance (not a fixed split between text and images).
 - Builds a prompt from the retrieved context (image hits contribute their
@@ -49,7 +49,7 @@ set, or whenever specs are added/updated:
 
 - Python 3.10+
 - [Ollama](https://ollama.com) installed and running locally, with a model
-  pulled (default expected: `llama3.1` — run `ollama pull llama3.1`)
+  pulled (default expected: `llama3.1` run `ollama pull llama3.1`)
 - Enough disk space for the local embedding/captioning models (a few GB,
   downloaded once and cached locally)
 
@@ -129,11 +129,13 @@ curl -X POST "http://localhost:8000/new_chat?session_id=<id>"
 ## Privacy notes
 
 - `HF_HUB_OFFLINE=1` is set before any Hugging Face imports, so the app
-  refuses to reach out to the internet for models at runtime — everything
+  refuses to reach out to the internet for models at runtime everything
   must already be cached locally (this happens naturally the first time you
   run ingestion, since that step downloads each model once).
 - The vector store is a local, embedded Qdrant instance (a folder on disk),
   not a hosted database.
-- The LLM call goes to a local Ollama server, not a cloud API — no document
+- The LLM call goes to a local Ollama server, not a cloud API no document
   content is ever transmitted off the machine.
+
+
 
