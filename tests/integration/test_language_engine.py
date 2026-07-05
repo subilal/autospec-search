@@ -49,9 +49,8 @@ class TestHealth:
         assert response.status_code == 200
 
     def test_health_returns_ok_status(self, client: TestClient) -> None:
-        data = response = client.get("/health").json()
+        data = client.get("/health").json()
         assert data["status"] == "ok"
-
 
 
 # Frontend serving

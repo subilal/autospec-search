@@ -1,13 +1,7 @@
-import os
 from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-#from qdrant_client import QdrantClient
-#from transformers.pipelines.automatic_speech_recognition import chunk_iter
-from qdrant_client import QdrantClient
 from langchain_qdrant import QdrantVectorStore
-from sentence_transformers import SentenceTransformer
 from langchain_huggingface import HuggingFaceEmbeddings
-from qdrant_client.http.models import Distance, VectorParams
 
 dotenv_path = "../.env"
 
@@ -50,15 +44,6 @@ print(f"Created {len(audi_spec_chunks)} chunks")
 ###
 
 embeddings = HuggingFaceEmbeddings(model_name=autospec_embedding_model)
-
-###
-### Vector store
-###
-#client = QdrantClient(path=audi_qdrant_vector_store_path)
-# client.create_collection(
-#     audi_qdrant_vector_store_collection,
-#     vectors_config=VectorParams(size=384, distance=Distance.COSINE)
-# )
 
 qdrant_audi_vector_store =  QdrantVectorStore.from_documents(
     documents=audi_spec_chunks,

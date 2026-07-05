@@ -1,12 +1,9 @@
 import os
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-#from qdrant_client import QdrantClient
-#from transformers.pipelines.automatic_speech_recognition import chunk_iter
-from qdrant_client import QdrantClient
 from langchain_qdrant import QdrantVectorStore
 from langchain_openai import OpenAIEmbeddings
-
+from dotenv import load_dotenv
 dotenv_path = "../.env"
 
 audiSpecDocsFolder = "../docs/Audi/"
@@ -18,7 +15,7 @@ audi_qdrant_vector_store_collection = "audi_spec_docs"
 ### Load access key
 ###
 
-from dotenv import load_dotenv
+
 load_dotenv(dotenv_path = dotenv_path)
 
 ###

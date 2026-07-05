@@ -45,7 +45,7 @@ query = input(" Type The Question : ")
 results = vector_store.similarity_search_with_score(query, k=4)
 print("Got Docs")
 
-ccontext = "\n\n".join(
+context = "\n\n".join(
     f"[Source: {doc.metadata.get('source', 'unknown')}, page {doc.metadata.get('page', '?')}]\n{doc.page_content}"
     for doc, score in results
 )
