@@ -2,5 +2,5 @@
 docs/
 models/qdrant_audi_vector_store/
 models/qdrant_audi_vector_store2/
-models/MultiModal Engine/qdrant_audi_multi_vector_store2/
 .idea/
+models/multimodal_engine/qdrant_audi_multi_vector_store2/
