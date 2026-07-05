@@ -1,10 +1,12 @@
 [paths]
-spec_docs_folder = "specs"
-vector_store_path = "qdrant_audi_vector_store2"
+spec_docs_folder = "docs"
+vector_store_path = "models/qdrant_audi_vector_store2"
+multi_vector_store_path = "models/multimodal_engine/qdrant_audi_multi_vector_store2"
 
 [collections]
 text_collection = "audi_spec_docs2"
-image_collection = "audi_spec_docs2_images"
+multi_text_collection = "audi_multi_spec_docs2"
+multi_image_collection = "audi_multi_spec_docs2_images"
 
 [chunking]
 chunk_size = 500
@@ -23,7 +25,7 @@ min_height = 50
 caption_max_new_tokens = 40
 
 [llm]
-ollama_url = "http://ollama:11434/api/generate"
+ollama_url = "http://localhost:11434/api/generate"
 ollama_model = "llama3.1"
 request_timeout_seconds = 300
 

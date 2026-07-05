@@ -4,3 +4,7 @@ models/qdrant_audi_vector_store/
 models/qdrant_audi_vector_store2/
 .idea/
 models/multimodal_engine/qdrant_audi_multi_vector_store2/
+__pycache__/
+api/language_engine/__pycache__/
+qdrant_audi_vector_store2/
+tests/unit/__pycache__/

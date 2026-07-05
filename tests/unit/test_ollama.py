@@ -2,10 +2,19 @@ import os
 import pytest
 import requests
 
-OLLAMA_GENERATE_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434/api/generate")
-OLLAMA_BASE_URL = OLLAMA_GENERATE_URL.split("/api/")[0]
-OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "llama3.1")
+try:
+    import tomllib  # stdlib on Python 3.11+
+except ModuleNotFoundError:
+    import tomli as tomllib  # backport for Python 3.10
 
+CONFIG_PATH = os.environ.get("CONFIG_PATH", "configs/config.toml")
+
+with open(CONFIG_PATH, "rb") as f:
+    _config = tomllib.load(f)
+
+OLLAMA_GENERATE_URL = os.environ.get("OLLAMA_URL", _config["llm"]["ollama_url"])
+OLLAMA_BASE_URL = OLLAMA_GENERATE_URL.split("/api/")[0]
+OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", _config["llm"]["ollama_model"])
 
 def _ollama_is_reachable() -> bool:
     try:

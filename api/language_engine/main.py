@@ -11,6 +11,9 @@ from qdrant_client import QdrantClient
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_qdrant import QdrantVectorStore
 
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="qdrant_client")
+
 try:
     import tomllib  # stdlib on Python 3.11+
 except ModuleNotFoundError:
@@ -22,20 +25,18 @@ CONFIG_PATH = os.environ.get("CONFIG_PATH", "configs/config.toml")
 with open(CONFIG_PATH, "rb") as f:
     _config = tomllib.load(f)
 
-AUDI_QDRANT_VECTOR_STORE_PATH = os.environ.get("VECTOR_STORE_PATH", _config["paths"]["vector_store_path"])
-OLLAMA_URL = os.environ.get("OLLAMA_URL", _config["llm"]["ollama_url"])
-OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", _config["llm"]["ollama_model"])
-OLLAMA_TIMEOUT_SECONDS = int(os.environ.get("OLLAMA_TIMEOUT_SECONDS", _config["llm"]["request_timeout_seconds"]))
-DEFAULT_TOP_K = int(os.environ.get("DEFAULT_TOP_K", _config["search"]["default_top_k"]))
-MAX_TURNS_KEPT = int(os.environ.get("MAX_TURNS_KEPT", _config["conversation"]["max_turns_kept"]))
+AUDI_QDRANT_VECTOR_STORE_PATH =  _config["paths"]["vector_store_path"]
+OLLAMA_URL = _config["llm"]["ollama_url"]
+OLLAMA_MODEL = _config["llm"]["ollama_model"]
+OLLAMA_TIMEOUT_SECONDS = int( _config["llm"]["request_timeout_seconds"])
+DEFAULT_TOP_K = int( _config["search"]["default_top_k"])
+MAX_TURNS_KEPT = int( _config["conversation"]["max_turns_kept"])
+AUDI_QDRANT_VECTOR_STORE_COLLECTION = _config["collections"]["text_collection"]
+AUTOSPEC_EMBEDDING_MODEL = _config["embeddings"]["text_model"]
 
 
-
-# Config
-AUDI_QDRANT_VECTOR_STORE_PATH = "qdrant_audi_vector_store2"
-AUDI_QDRANT_VECTOR_STORE_COLLECTION = "audi_spec_docs2"
-AUTOSPEC_EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-
+print(AUDI_QDRANT_VECTOR_STORE_PATH)
+print(AUTOSPEC_EMBEDDING_MODEL)
 
 # App setup
 app = FastAPI(title="AutoSpec Search API")
@@ -112,7 +113,7 @@ def call_llama(prompt: str) -> str:
 # Routes
 @app.get("/", response_class=FileResponse)
 def home():
-    return FileResponse("templates/index.html")
+    return FileResponse("api/language_engine/templates/index.html")
 
 
 @app.get("/health")
