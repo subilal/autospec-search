@@ -1,0 +1,25 @@
+[project]
+name = "autospec-search"
+version = "0.1.0"
+description = "Fully local, privacy-preserving search over engineering spec PDFs (text, tables, and images)."
+readme = "README.md"
+requires-python = ">=3.10"
+
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic",
+    "requests",
+    "langchain-community",
+    "langchain-text-splitters",
+    "langchain-core",
+    "pypdf",
+    "pymupdf",
+    "Pillow",
+    "langchain-huggingface",
+    "sentence-transformers",
+    "transformers",
+    "torch",
+    "qdrant-client",
+    "langchain-qdrant",
+]

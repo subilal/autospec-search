@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: autospec-search
+  labels:
+    app: autospec-search
+spec:
+  type: ClusterIP
+  selector:
+    app: autospec-search
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http

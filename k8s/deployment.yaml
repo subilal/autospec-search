@@ -1,1 +1,50 @@
-
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autospec-search
+  labels:
+    app: autospec-search
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: autospec-search
+  template:
+    metadata:
+      labels:
+        app: autospec-search
+    spec:
+      containers:
+        - name: autospec-search
+          image: autospec-search:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+          env:
+            - name: CONFIG_PATH
+              value: "/configs/config.toml"
+          volumeMounts:
+            - name: vector-store
+              mountPath: /app/qdrant_audi_vector_store2
+              subPath: qdrant_audi_vector_store2
+            - name: app-config
+              mountPath: /app/config.toml
+              subPath: config.toml
+              readOnly: true
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "1Gi"
+            limits:
+              cpu: "1"
+              memory: "2Gi"
+      volumes:
+        - name: vector-store
+          persistentVolumeClaim:
+            claimName: autospec-vector-store-pvc
+        - name: app-config
+          configMap:
+            name: autospec-search-config
