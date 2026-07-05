@@ -1,0 +1,32 @@
+# ruff.toml — linter + formatter config for AutoSpec Search
+
+line-length = 120
+
+[lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes (unused imports, undefined names)
+    "I",    # isort (import ordering)
+    "W",    # pycodestyle warnings
+    "UP",   # pyupgrade (modernise Python syntax)
+    "B",    # flake8-bugbear (common bugs)
+    "N",    # pep8 naming conventions
+]
+
+ignore = [
+    "E501",  # line too long — handled by formatter, not linter
+    "B008",  # do not perform function calls in default arguments (FastAPI uses this pattern)
+    "N999",  # invalid module name — our folder names use underscores which is fine
+]
+
+# Don't lint these
+exclude = [
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".git",
+    "notebooks",
+]
+
+[lint.isort]
+known-first-party = ["api"]   # treat 'api' as our own code, not third-party
