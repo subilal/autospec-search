@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import List
-
 import pytest
 from pydantic import BaseModel, Field
 from qdrant_client import QdrantClient
@@ -42,11 +40,11 @@ class VectorStoreSettings(BaseModel):
     )
 
     @property
-    def expected_single_collections(self) -> List[str]:
+    def expected_single_collections(self) -> list[str]:
         return [self.text_collection]
 
     @property
-    def expected_multi_collections(self) -> List[str]:
+    def expected_multi_collections(self) -> list[str]:
         return [self.multi_text_collection, self.multi_image_collection]
 
 
@@ -89,7 +87,7 @@ class TestCollectionsExist:
         """
 
         """
-        actual: List[str] = [c.name for c in client.get_collections().collections]
+        actual: list[str] = [c.name for c in client.get_collections().collections]
 
         missing = [name for name in settings.expected_single_collections if name not in actual]
         assert not missing, f"Expected collection(s) missing entirely: {missing}. Found: {actual}"
@@ -165,7 +163,7 @@ class TestMultiCollectionsExist:
             self, multi_client: QdrantClient, settings: VectorStoreSettings
     ) -> None:
 
-        actual: List[str] = [c.name for c in multi_client.get_collections().collections]
+        actual: list[str] = [c.name for c in multi_client.get_collections().collections]
 
         missing = [name for name in settings.expected_multi_collections if name not in actual]
         assert not missing, f"Expected collection(s) missing entirely: {missing}. Found: {actual}"
@@ -232,3 +230,4 @@ class TestMultiCollectionsAreQueryable:
         assert "source" in payload["metadata"], (
             f"Expected 'source' in metadata. Got keys: {list(payload['metadata'].keys())}"
         )
+

@@ -1,7 +1,9 @@
 import os
+import requests
+
 os.environ["HF_HUB_OFFLINE"] = "1"
 
-import requests
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse

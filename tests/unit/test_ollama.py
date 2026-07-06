@@ -57,3 +57,4 @@ def test_generate_endpoint_returns_a_response():
     assert "response" in data
     assert isinstance(data["response"], str)
     assert data["response"].strip() != ""
+

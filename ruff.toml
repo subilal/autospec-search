@@ -1,6 +1,14 @@
 # ruff.toml — linter + formatter config for AutoSpec Search
-
 line-length = 120
+
+# Don't lint these
+exclude = [
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".git",
+    "notebooks",
+]
 
 [lint]
 select = [
@@ -19,14 +27,19 @@ ignore = [
     "N999",  # invalid module name — our folder names use underscores which is fine
 ]
 
-# Don't lint these
-exclude = [
-    ".venv",
-    "venv",
-    "__pycache__",
-    ".git",
-    "notebooks",
-]
+[lint.per-file-ignores]
+"api/language_engine/main.py" = ["E402", "I001"]
+"api/language_engine/main_ver_0.1.py" = ["E402", "I001"]
+"api/language_engine/main_ver_0.2.py" = ["E402", "I001"]
+"api/multimodal_engine/main.py" = ["E402", "I001"]
+"conftest.py" = ["E402", "I001"]
+"models/language_engine/RAG MODEL.py" = ["E402", "I001"]
+"models/language_engine/RAG_VECTOR_DATABASE.py" = ["E402", "I001"]
+"models/language_engine/RAG_VECTOR_DATABASE_Sentence_transformer.py" = ["E402", "I001"]
+"models/multimodal_engine/RAG_VECTOR_DATABASE_Qdrant_Multimodal.py" = ["E402", "I001"]
+"tests/unit/test_ollama.py" = ["E402", "I001"]
+"tests/unit/test_vector_store.py" = ["E402", "I001"]
+"tests/integration/test_language_engine.py" = ["E402", "I001"]
 
 [lint.isort]
 known-first-party = ["api"]   # treat 'api' as our own code, not third-party

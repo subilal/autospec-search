@@ -1,7 +1,8 @@
 import os
+import requests
+
 os.environ["HF_HUB_OFFLINE"] = "1"   # must be set before HF imports
 
-import requests
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel

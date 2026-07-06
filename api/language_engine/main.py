@@ -1,8 +1,10 @@
 import os
-os.environ["HF_HUB_OFFLINE"] = "1"   # must be set before HF imports
-
 import uuid
 import requests
+import warnings
+
+os.environ["HF_HUB_OFFLINE"] = "1"   # must be set before HF imports
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -11,7 +13,7 @@ from qdrant_client import QdrantClient
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_qdrant import QdrantVectorStore
 
-import warnings
+
 warnings.filterwarnings("ignore", category=UserWarning, module="qdrant_client")
 
 try:

@@ -1,9 +1,10 @@
 import os
-os.environ["HF_HUB_OFFLINE"] = "1"
+import requests
 from qdrant_client import QdrantClient
+os.environ["HF_HUB_OFFLINE"] = "1"
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_qdrant import QdrantVectorStore
-import requests
+
 
 AUDI_QDRANT_VECTOR_STORE_PATH = "./qdrant_audi_vector_store2"
 AUDI_QDRANT_VECTOR_STORE_COLLECTION = "audi_spec_docs2"

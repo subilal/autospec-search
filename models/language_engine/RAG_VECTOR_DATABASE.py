@@ -3,26 +3,18 @@ from langchain_community.document_loaders import DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_qdrant import QdrantVectorStore
 from langchain_openai import OpenAIEmbeddings
-from dotenv import load_dotenv
-dotenv_path = "../.env"
 
-audiSpecDocsFolder = "../docs/Audi/"
 
+audi_spec_docs_folder  = "../docs/Audi/"
 audi_qdrant_vector_store_path = "./qdrant_audi_vector_store"
 audi_qdrant_vector_store_collection = "audi_spec_docs"
 
-###
-### Load access key
-###
-
-
-load_dotenv(dotenv_path = dotenv_path)
 
 ###
 ### Loc
 ###
 loader = DirectoryLoader(
-    audiSpecDocsFolder,
+    audi_spec_docs_folder ,
     glob="**/*.pdf",   # loads all files recursively
 )
 
@@ -69,5 +61,4 @@ results = qdrant_audi_vector_store.similarity_search(
 
 for doc in results:
     print(doc.page_content)
-
 

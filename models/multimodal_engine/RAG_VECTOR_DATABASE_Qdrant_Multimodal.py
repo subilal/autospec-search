@@ -4,7 +4,6 @@ import uuid
 import fitz
 from PIL import Image
 from typing import Any
-from typing import List
 from langchain_core.documents import Document
 from langchain_qdrant import QdrantVectorStore
 from langchain_core.embeddings import Embeddings
@@ -15,7 +14,7 @@ from transformers import BlipProcessor, BlipForConditionalGeneration
 from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
 
 dotenv_path = "../.env"
-audiSpecDocsFolder = "../../docs/Audi/"
+audi_spec_docs_folder  = "../../docs/Audi/"
 audi_qdrant_vector_store_path = "./qdrant_audi_multi_vector_store2"
 audi_qdrant_vector_store_collection = "audi_multi_spec_docs2"
 autospec_embedding_model = "all-MiniLM-L6-v2"
@@ -23,7 +22,7 @@ autospec_embedding_model = "all-MiniLM-L6-v2"
 
 ### Load the pdf and extract the pages
 loader = DirectoryLoader(
-    audiSpecDocsFolder,
+    audi_spec_docs_folder ,
     glob="**/*.pdf",
     loader_cls=PyPDFLoader
 )
@@ -47,7 +46,7 @@ print(f"Created {len(audi_spec_chunks)} chunks")
 
 
 # Creating a FOlder to save the extracted image( Used later for captioning)
-audi_extracted_images_folder = os.path.join(audiSpecDocsFolder, "_extracted_images")
+audi_extracted_images_folder = os.path.join(audi_spec_docs_folder , "_extracted_images")
 os.makedirs(audi_extracted_images_folder, exist_ok=True)
 
 audi_spec_image_records: list[dict[str, Any]] = []
@@ -186,7 +185,7 @@ class ClipImageEmbeddings(Embeddings):
     def __init__(self, model_name: str = "clip-ViT-B-32"):
         self.model = SentenceTransformer(model_name)
 
-    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
         inputs = []
         for text in texts:
             image = None
@@ -200,7 +199,7 @@ class ClipImageEmbeddings(Embeddings):
         vectors = self.model.encode(inputs, convert_to_numpy=True, show_progress_bar=True)
         return vectors.tolist()
 
-    def embed_query(self, text: str) -> List[float]:
+    def embed_query(self, text: str) -> list[float]:
         vector = self.model.encode(text, convert_to_numpy=True)
         return vector.tolist()
 

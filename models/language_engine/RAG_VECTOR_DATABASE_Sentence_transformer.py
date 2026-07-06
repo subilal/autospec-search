@@ -5,7 +5,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 
 dotenv_path = "../.env"
 
-audiSpecDocsFolder = "../docs/Audi/"
+audi_spec_docs_folder  = "../docs/Audi/"
 
 audi_qdrant_vector_store_path = "./qdrant_audi_vector_store2"
 audi_qdrant_vector_store_collection = "audi_spec_docs2"
@@ -15,7 +15,7 @@ autospec_embedding_model = "all-MiniLM-L6-v2"
 ### Loc
 ###
 loader = DirectoryLoader(
-    audiSpecDocsFolder,
+    audi_spec_docs_folder ,
     glob = "**/*.pdf",   # loads all files recursively
     loader_cls = PyPDFLoader
 )

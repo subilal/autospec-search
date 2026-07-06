@@ -1,8 +1,10 @@
+# ruff: noqa: E402
 import os
-os.environ["HF_HUB_OFFLINE"] = "1"   # must be set before HF imports
-
 import uuid
 import requests
+
+os.environ["HF_HUB_OFFLINE"] = "1"   # must be set before HF imports
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
