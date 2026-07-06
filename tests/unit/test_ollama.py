@@ -16,6 +16,7 @@ OLLAMA_GENERATE_URL = os.environ.get("OLLAMA_URL", _config["llm"]["ollama_url"])
 OLLAMA_BASE_URL = OLLAMA_GENERATE_URL.split("/api/")[0]
 OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", _config["llm"]["ollama_model"])
 
+
 def _ollama_is_reachable() -> bool:
     try:
         requests.get(OLLAMA_BASE_URL, timeout=2)
@@ -41,9 +42,9 @@ def test_configured_model_is_pulled():
 
     available_models = [m["name"] for m in response.json().get("models", [])]
     assert any(OLLAMA_MODEL in name for name in available_models), (
-        f"Model '{OLLAMA_MODEL}' is not pulled. Available: {available_models}. "
-        f"Run: ollama pull {OLLAMA_MODEL}"
+        f"Model '{OLLAMA_MODEL}' is not pulled. Available: {available_models}. Run: ollama pull {OLLAMA_MODEL}"
     )
+
 
 def test_generate_endpoint_returns_a_response():
     response = requests.post(
@@ -57,4 +58,3 @@ def test_generate_endpoint_returns_a_response():
     assert "response" in data
     assert isinstance(data["response"], str)
     assert data["response"].strip() != ""
-

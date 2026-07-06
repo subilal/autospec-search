@@ -5,7 +5,7 @@ from langchain_qdrant import QdrantVectorStore
 from langchain_openai import OpenAIEmbeddings
 
 
-audi_spec_docs_folder  = "../docs/Audi/"
+audi_spec_docs_folder = "../docs/Audi/"
 audi_qdrant_vector_store_path = "./qdrant_audi_vector_store"
 audi_qdrant_vector_store_collection = "audi_spec_docs"
 
@@ -14,8 +14,8 @@ audi_qdrant_vector_store_collection = "audi_spec_docs"
 ### Loc
 ###
 loader = DirectoryLoader(
-    audi_spec_docs_folder ,
-    glob="**/*.pdf",   # loads all files recursively
+    audi_spec_docs_folder,
+    glob="**/*.pdf",  # loads all files recursively
 )
 
 audi_spec_docs = loader.load()
@@ -24,10 +24,7 @@ audi_spec_docs = loader.load()
 ### Chunking document
 ###
 
-text_splitter = RecursiveCharacterTextSplitter(
-                            chunk_size = 500,
-                            chunk_overlap=100
-)
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
 
 audi_spec_chunks = text_splitter.split_documents(audi_spec_docs)
 
@@ -39,8 +36,8 @@ print(f"Created {len(audi_spec_chunks)} chunks")
 ###
 
 
-#client = QdrantClient(path="./qdrant_audi_vector_store2")
-qdrant_audi_vector_store =  QdrantVectorStore.from_documents(
+# client = QdrantClient(path="./qdrant_audi_vector_store2")
+qdrant_audi_vector_store = QdrantVectorStore.from_documents(
     documents=audi_spec_chunks,
     embedding=OpenAIEmbeddings(api_key=os.getenv("OPENAI_API_KEY")),
     path=audi_qdrant_vector_store_path,
@@ -54,11 +51,7 @@ query = "What Python version is required?"
 
 print(query)
 
-results = qdrant_audi_vector_store.similarity_search(
-    query,
-    k=3
-)
+results = qdrant_audi_vector_store.similarity_search(query, k=3)
 
 for doc in results:
     print(doc.page_content)
-

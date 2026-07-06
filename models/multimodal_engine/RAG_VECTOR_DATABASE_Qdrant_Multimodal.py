@@ -14,26 +14,19 @@ from transformers import BlipProcessor, BlipForConditionalGeneration
 from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
 
 dotenv_path = "../.env"
-audi_spec_docs_folder  = "../../docs/Audi/"
+audi_spec_docs_folder = "../../docs/Audi/"
 audi_qdrant_vector_store_path = "./qdrant_audi_multi_vector_store2"
 audi_qdrant_vector_store_collection = "audi_multi_spec_docs2"
 autospec_embedding_model = "all-MiniLM-L6-v2"
 
 
 ### Load the pdf and extract the pages
-loader = DirectoryLoader(
-    audi_spec_docs_folder ,
-    glob="**/*.pdf",
-    loader_cls=PyPDFLoader
-)
+loader = DirectoryLoader(audi_spec_docs_folder, glob="**/*.pdf", loader_cls=PyPDFLoader)
 
 audi_spec_docs = loader.load()
 
 ### Split the texts from documents inot chunks
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=500,
-    chunk_overlap=100
-)
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
 
 audi_spec_chunks = text_splitter.split_documents(audi_spec_docs)
 
@@ -46,7 +39,7 @@ print(f"Created {len(audi_spec_chunks)} chunks")
 
 
 # Creating a FOlder to save the extracted image( Used later for captioning)
-audi_extracted_images_folder = os.path.join(audi_spec_docs_folder , "_extracted_images")
+audi_extracted_images_folder = os.path.join(audi_spec_docs_folder, "_extracted_images")
 os.makedirs(audi_extracted_images_folder, exist_ok=True)
 
 audi_spec_image_records: list[dict[str, Any]] = []
@@ -91,7 +84,7 @@ for pdf_path in pdf_paths:
             if pil_image.width < 100 or pil_image.height < 100:
                 continue
 
-            #Assign Unique filenames and save in Folder
+            # Assign Unique filenames and save in Folder
             image_id = f"{uuid.uuid4()}"
             image_path = os.path.join(audi_extracted_images_folder, f"{image_id}.png")
             pil_image.save(image_path)
@@ -107,11 +100,13 @@ for pdf_path in pdf_paths:
             }
 
             # Register image for embedding generation
-            audi_spec_image_records.append({
-                "image": pil_image,
-                "image_path": image_path,
-                "metadata": image_metadata,
-            })
+            audi_spec_image_records.append(
+                {
+                    "image": pil_image,
+                    "image_path": image_path,
+                    "metadata": image_metadata,
+                }
+            )
 
     pdf_doc.close()
 
@@ -150,15 +145,16 @@ for pdf_path in pdf_paths:
             }
 
             # Register table for embedding generation
-            audi_spec_table_records.append({
-                "markdown": markdown_table,
-                "metadata": table_metadata,
-            })
+            audi_spec_table_records.append(
+                {
+                    "markdown": markdown_table,
+                    "metadata": table_metadata,
+                }
+            )
 
     pdf_doc.close()
 
 print(f"Extracted {len(audi_spec_table_records)} tables")
-
 
 
 ### Image captioning
@@ -178,9 +174,9 @@ print("Captioned all extracted images")
 ### Embeddings
 embeddings = HuggingFaceEmbeddings(model_name=autospec_embedding_model)
 
+
 class ClipImageEmbeddings(Embeddings):
-    """
-    """
+    """ """
 
     def __init__(self, model_name: str = "clip-ViT-B-32"):
         self.model = SentenceTransformer(model_name)
@@ -213,8 +209,7 @@ os.makedirs(audi_qdrant_vector_store_path, exist_ok=True)
 
 ### Qdrant Format support
 audi_table_documents = [
-    Document(page_content=record["markdown"], metadata=record["metadata"])
-    for record in audi_spec_table_records
+    Document(page_content=record["markdown"], metadata=record["metadata"]) for record in audi_spec_table_records
 ]
 
 audi_caption_documents = [
@@ -233,17 +228,18 @@ audi_qdrant_text_store = QdrantVectorStore.from_documents(
 )
 audi_qdrant_text_store.client.close()
 
-print(f"Upserted {len(audi_all_text_documents)} text-space points "
-      f"({len(audi_spec_chunks)} chunks, {len(audi_table_documents)} tables, "
-      f"{len(audi_caption_documents)} image captions) "
-      f"into '{audi_qdrant_vector_store_collection}'")
+print(
+    f"Upserted {len(audi_all_text_documents)} text-space points "
+    f"({len(audi_spec_chunks)} chunks, {len(audi_table_documents)} tables, "
+    f"{len(audi_caption_documents)} image captions) "
+    f"into '{audi_qdrant_vector_store_collection}'"
+)
 
 audi_qdrant_image_collection = f"{audi_qdrant_vector_store_collection}_images"
 
 if audi_spec_image_records:
     audi_image_documents = [
-        Document(page_content=record["image_path"], metadata=record["metadata"])
-        for record in audi_spec_image_records
+        Document(page_content=record["image_path"], metadata=record["metadata"]) for record in audi_spec_image_records
     ]
 
     audi_qdrant_image_store = QdrantVectorStore.from_documents(

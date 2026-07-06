@@ -1,6 +1,7 @@
 import os
 import requests
 from qdrant_client import QdrantClient
+
 os.environ["HF_HUB_OFFLINE"] = "1"
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_qdrant import QdrantVectorStore
@@ -10,12 +11,13 @@ AUDI_QDRANT_VECTOR_STORE_PATH = "./qdrant_audi_vector_store2"
 AUDI_QDRANT_VECTOR_STORE_COLLECTION = "audi_spec_docs2"
 AUTOSPEC_EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 
+
 def call_llama(prompt: str) -> str:
     try:
         response = requests.post(
             "http://localhost:11434/api/generate",
             json={"model": "llama3.1", "prompt": prompt, "stream": False},
-            timeout=120
+            timeout=120,
         )
         response.raise_for_status()
         return response.json()["response"]
@@ -24,11 +26,10 @@ def call_llama(prompt: str) -> str:
     except Exception as e:
         return f"ERROR calling Llama: {e}"
 
+
 def get_vector_store():
     client = QdrantClient(path=AUDI_QDRANT_VECTOR_STORE_PATH)
-    embeddings = HuggingFaceEmbeddings(model_name=AUTOSPEC_EMBEDDING_MODEL,
-                        model_kwargs={"local_files_only": True}
-                                       )
+    embeddings = HuggingFaceEmbeddings(model_name=AUTOSPEC_EMBEDDING_MODEL, model_kwargs={"local_files_only": True})
 
     return QdrantVectorStore(
         client=client,
@@ -37,10 +38,8 @@ def get_vector_store():
     )
 
 
-
-
-vector_store  = get_vector_store()
-#llm = ChatOpenAI(model="gpt-4o-mini")
+vector_store = get_vector_store()
+# llm = ChatOpenAI(model="gpt-4o-mini")
 query = input(" Type The Question : ")
 
 results = vector_store.similarity_search_with_score(query, k=4)

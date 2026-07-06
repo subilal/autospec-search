@@ -18,12 +18,14 @@ with open(CONFIG_PATH, "rb") as f:
 OLLAMA_URL = os.environ.get("OLLAMA_URL", _config["llm"]["ollama_url"])
 OLLAMA_BASE_URL = OLLAMA_URL.split("/api/")[0]
 
+
 def _ollama_is_reachable() -> bool:
     try:
         http_requests.get(OLLAMA_BASE_URL, timeout=2)
         return True
     except http_requests.exceptions.RequestException:
         return False
+
 
 # Fixtures
 @pytest.fixture(scope="module")
@@ -35,8 +37,10 @@ def client():
     """
 
     from api.language_engine.main import app
+
     with TestClient(app, raise_server_exceptions=True) as c:
         yield c
+
 
 # Health check
 class TestHealth:
@@ -77,7 +81,7 @@ class TestFrontend:
 class TestSearchValidation:
     def test_search_rejects_empty_body(self, client: TestClient) -> None:
         response = client.post("/search", json={})
-        assert response.status_code == 422   # Pydantic validation error
+        assert response.status_code == 422  # Pydantic validation error
 
     def test_search_rejects_missing_query(self, client: TestClient) -> None:
         response = client.post("/search", json={"top_k": 4})
@@ -90,14 +94,9 @@ class TestSearchValidation:
         assert response.status_code == 200
 
     def test_search_accepts_optional_fields(self, client: TestClient) -> None:
-        response = client.post("/search", json={
-            "query": "brake pad thickness",
-            "top_k": 2,
-            "session_id": None
-        })
+        response = client.post("/search", json={"query": "brake pad thickness", "top_k": 2, "session_id": None})
         assert response.status_code == 200
 
     def test_search_rejects_invalid_top_k_type(self, client: TestClient) -> None:
         response = client.post("/search", json={"query": "fuel cap", "top_k": "four"})
         assert response.status_code == 422
-

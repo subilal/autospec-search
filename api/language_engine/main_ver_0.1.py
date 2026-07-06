@@ -25,7 +25,7 @@ app = FastAPI(title="AutoSpec Search API")
 # Allow the frontend (served from a different origin/port) to call this API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # fine for local dev; tighten for production
+    allow_origins=["*"],  # fine for local dev; tighten for production
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -133,4 +133,5 @@ Answer (include citations like [source, page X]):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

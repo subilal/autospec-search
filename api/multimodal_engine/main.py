@@ -3,7 +3,7 @@ import os
 import uuid
 import requests
 
-os.environ["HF_HUB_OFFLINE"] = "1"   # must be set before HF imports
+os.environ["HF_HUB_OFFLINE"] = "1"  # must be set before HF imports
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -19,7 +19,7 @@ from sentence_transformers import SentenceTransformer
 
 # Config
 AUDI_QDRANT_VECTOR_STORE_PATH = "qdrant_audi_vector_store2"
-AUDI_QDRANT_TEXT_COLLECTION = "audi_spec_docs2"                       # chunks + tables + image captions
+AUDI_QDRANT_TEXT_COLLECTION = "audi_spec_docs2"  # chunks + tables + image captions
 AUDI_QDRANT_IMAGE_COLLECTION = f"{AUDI_QDRANT_TEXT_COLLECTION}_images"  # raw images (CLIP)
 AUTOSPEC_EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 CLIP_EMBEDDING_MODEL = "clip-ViT-B-32"
@@ -33,7 +33,7 @@ app = FastAPI(title="AutoSpec Search API")
 # Allow the frontend (served from a different origin/port) to call this API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # fine for local dev; tighten for production
+    allow_origins=["*"],  # fine for local dev; tighten for production
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -50,14 +50,14 @@ class SourceChunk(BaseModel):
     source: str
     page: int | None = None
     score: float
-    content_type: str = "text"        # "text" | "table" | "image"
-    image_path: str | None = None     # set only for content_type == "image"
+    content_type: str = "text"  # "text" | "table" | "image"
+    image_path: str | None = None  # set only for content_type == "image"
 
 
 class SearchResponse(BaseModel):
     answer: str
     sources: list[SourceChunk]
-    session_id: str   # always returned so the frontend can choose to reuse it
+    session_id: str  # always returned so the frontend can choose to reuse it
 
 
 # CLIP embedding adapter for the image collection (mirrors ingestion script).
@@ -174,8 +174,7 @@ def search(request: SearchRequest):
     if history:
         recent_turns = history[-MAX_TURNS_KEPT:]
         history_block = "\n\n".join(
-            f"Previous question: {turn['query']}\nPrevious answer: {turn['answer']}"
-            for turn in recent_turns
+            f"Previous question: {turn['query']}\nPrevious answer: {turn['answer']}" for turn in recent_turns
         )
         history_block = f"Conversation so far:\n{history_block}\n\n"
 
@@ -222,4 +221,5 @@ def new_chat(session_id: str | None = None):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

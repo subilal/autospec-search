@@ -3,7 +3,7 @@ import uuid
 import requests
 import warnings
 
-os.environ["HF_HUB_OFFLINE"] = "1"   # must be set before HF imports
+os.environ["HF_HUB_OFFLINE"] = "1"  # must be set before HF imports
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,12 +27,12 @@ CONFIG_PATH = os.environ.get("CONFIG_PATH", "configs/config.toml")
 with open(CONFIG_PATH, "rb") as f:
     _config = tomllib.load(f)
 
-AUDI_QDRANT_VECTOR_STORE_PATH =  _config["paths"]["vector_store_path"]
+AUDI_QDRANT_VECTOR_STORE_PATH = _config["paths"]["vector_store_path"]
 OLLAMA_URL = _config["llm"]["ollama_url"]
 OLLAMA_MODEL = _config["llm"]["ollama_model"]
-OLLAMA_TIMEOUT_SECONDS = int( _config["llm"]["request_timeout_seconds"])
-DEFAULT_TOP_K = int( _config["search"]["default_top_k"])
-MAX_TURNS_KEPT = int( _config["conversation"]["max_turns_kept"])
+OLLAMA_TIMEOUT_SECONDS = int(_config["llm"]["request_timeout_seconds"])
+DEFAULT_TOP_K = int(_config["search"]["default_top_k"])
+MAX_TURNS_KEPT = int(_config["conversation"]["max_turns_kept"])
 AUDI_QDRANT_VECTOR_STORE_COLLECTION = _config["collections"]["text_collection"]
 AUTOSPEC_EMBEDDING_MODEL = _config["embeddings"]["text_model"]
 
@@ -46,7 +46,7 @@ app = FastAPI(title="AutoSpec Search API")
 # Allow the frontend (served from a different origin/port) to call this API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # fine for local dev; tighten for production
+    allow_origins=["*"],  # fine for local dev; tighten for production
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -68,7 +68,7 @@ class SourceChunk(BaseModel):
 class SearchResponse(BaseModel):
     answer: str
     sources: list[SourceChunk]
-    session_id: str   # always returned so the frontend can choose to reuse it
+    session_id: str  # always returned so the frontend can choose to reuse it
 
 
 # Vector store (loaded once at startup, reused across requests)
@@ -151,8 +151,7 @@ def search(request: SearchRequest):
     if history:
         recent_turns = history[-MAX_TURNS_KEPT:]
         history_block = "\n\n".join(
-            f"Previous question: {turn['query']}\nPrevious answer: {turn['answer']}"
-            for turn in recent_turns
+            f"Previous question: {turn['query']}\nPrevious answer: {turn['answer']}" for turn in recent_turns
         )
         history_block = f"Conversation so far:\n{history_block}\n\n"
 
@@ -196,4 +195,5 @@ def new_chat(session_id: str | None = None):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
