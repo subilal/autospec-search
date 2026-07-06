@@ -3,8 +3,6 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_qdrant import QdrantVectorStore
 from langchain_huggingface import HuggingFaceEmbeddings
 
-dotenv_path = "../.env"
-
 audi_spec_docs_folder = "../docs/Audi/"
 
 audi_qdrant_vector_store_path = "./qdrant_audi_vector_store2"

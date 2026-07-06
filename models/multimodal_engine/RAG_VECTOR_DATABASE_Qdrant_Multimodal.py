@@ -13,7 +13,6 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from transformers import BlipProcessor, BlipForConditionalGeneration
 from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
 
-dotenv_path = "../.env"
 audi_spec_docs_folder = "../../docs/Audi/"
 audi_qdrant_vector_store_path = "./qdrant_audi_multi_vector_store2"
 audi_qdrant_vector_store_collection = "audi_multi_spec_docs2"

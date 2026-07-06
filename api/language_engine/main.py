@@ -89,8 +89,6 @@ vector_store = get_vector_store()
 
 
 # Conversation memory
-# Simple in-memory store: { session_id: [ {"query": ..., "answer": ...}, ... ] }
-# Fine for a local single-user tool. Resets when the server restarts.
 conversation_store: dict[str, list[dict]] = {}
 
 MAX_TURNS_KEPT = 5  # how many previous Q&A turns to carry forward as context
